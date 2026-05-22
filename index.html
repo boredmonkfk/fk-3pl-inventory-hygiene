@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FK Minutes · 3PL Charter Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0B1523; color: #e2e8f0; font-family: 'DM Sans', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0B1523; }
+    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 3px; }
+    button { font-family: inherit; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const STORES_DATA = [
+      { id:"pun_114_wh_hl_01", name:"Hinjewadi Phase 3", city:"Pune", zone:"West", orders:661, inf_pct:0.6, cold_wp_pct:1.55, bin_acc:40.0, pst_15d:11, hv_pst:97, auto_ttl:47, expired_inv_pct:13.31, dmmq_pct:1.6, final_score:2.5, bin_acc_score:1.6, hv_pst_score:4.7, pst_score:0.1, auto_ttl_score:2.9, cold_wp_score:1.9, inf_score:3.8, expired_score:0.0, dmmq_score:1.4, ptpi_score:3.4 },
+      { id:"pun_140_wh_hl_01", name:"Pimple Gurav", city:"Pune", zone:"West", orders:368, inf_pct:0.5, cold_wp_pct:3.72, bin_acc:86.18, pst_15d:45, hv_pst:86, auto_ttl:50, expired_inv_pct:8.15, dmmq_pct:1.9, final_score:3.2, bin_acc_score:3.7, hv_pst_score:3.7, pst_score:1.8, auto_ttl_score:3.0, cold_wp_score:0.0, inf_score:4.0, expired_score:0.0, dmmq_score:1.1, ptpi_score:4.8 },
+      { id:"pun_144_wh_hl_01", name:"Marynji", city:"Pune", zone:"West", orders:556, inf_pct:0.2, cold_wp_pct:4.27, bin_acc:99.48, pst_15d:22, hv_pst:99, auto_ttl:86, expired_inv_pct:1.98, dmmq_pct:1.0, final_score:3.8, bin_acc_score:4.9, hv_pst_score:4.9, pst_score:0.8, auto_ttl_score:4.4, cold_wp_score:0.0, inf_score:4.6, expired_score:1.0, dmmq_score:2.1, ptpi_score:4.8 },
+      { id:"pun_159_wh_hl_01", name:"Chikhali", city:"Pune", zone:"West", orders:242, inf_pct:0.0, cold_wp_pct:4.43, bin_acc:96.2, pst_15d:10, hv_pst:0, auto_ttl:63, expired_inv_pct:31.82, dmmq_pct:1.3, final_score:3.3, bin_acc_score:4.6, hv_pst_score:0.0, pst_score:0.0, auto_ttl_score:3.5, cold_wp_score:0.0, inf_score:5.0, expired_score:0.0, dmmq_score:1.7, ptpi_score:4.5 },
+      { id:"kol_103_wh_hl_01", name:"Kamalgazi", city:"Kolkata", zone:"East", orders:488, inf_pct:1.8, cold_wp_pct:5.29, bin_acc:62.5, pst_15d:25, hv_pst:0, auto_ttl:66, expired_inv_pct:0.82, dmmq_pct:0.5, final_score:2.6, bin_acc_score:2.5, hv_pst_score:0.0, pst_score:1.0, auto_ttl_score:3.6, cold_wp_score:0.0, inf_score:1.7, expired_score:2.4, dmmq_score:3.0, ptpi_score:4.6 },
+      { id:"ben_229_wh_hl_01", name:"Dommasandra", city:"Bengaluru", zone:"South", orders:238, inf_pct:0.7, cold_wp_pct:2.49, bin_acc:99.49, pst_15d:30, hv_pst:39, auto_ttl:90, expired_inv_pct:1.68, dmmq_pct:1.0, final_score:3.4, bin_acc_score:4.9, hv_pst_score:1.5, pst_score:1.2, auto_ttl_score:4.6, cold_wp_score:0.7, inf_score:3.6, expired_score:1.3, dmmq_score:2.0, ptpi_score:4.1 },
+      { id:"hyd_165_wh_hl_01", name:"Neredmet Road", city:"Hyderabad", zone:"South", orders:236, inf_pct:0.0, cold_wp_pct:4.21, bin_acc:100.0, pst_15d:51, hv_pst:98, auto_ttl:29, expired_inv_pct:3.39, dmmq_pct:0.8, final_score:3.9, bin_acc_score:5.0, hv_pst_score:4.8, pst_score:2.1, auto_ttl_score:2.2, cold_wp_score:0.0, inf_score:5.0, expired_score:0.0, dmmq_score:2.4, ptpi_score:5.0 },
+      { id:"hyd_134_wh_hl_01", name:"Shastripuram", city:"Hyderabad", zone:"South", orders:223, inf_pct:1.3, cold_wp_pct:14.35, bin_acc:5.26, pst_15d:62, hv_pst:64, auto_ttl:36, expired_inv_pct:4.93, dmmq_pct:0.7, final_score:2.0, bin_acc_score:0.2, hv_pst_score:2.6, pst_score:2.5, auto_ttl_score:2.4, cold_wp_score:0.0, inf_score:2.4, expired_score:0.0, dmmq_score:2.6, ptpi_score:3.2 },
+      { id:"koz_105_wh_hl_01", name:"Puthiyara", city:"Kozhikode", zone:"South", orders:215, inf_pct:0.0, cold_wp_pct:0.0, bin_acc:98.45, pst_15d:62, hv_pst:24, auto_ttl:100, expired_inv_pct:0.0, dmmq_pct:0.4, final_score:4.0, bin_acc_score:4.8, hv_pst_score:0.9, pst_score:2.5, auto_ttl_score:5.0, cold_wp_score:5.0, inf_score:5.0, expired_score:5.0, dmmq_score:3.6, ptpi_score:3.0 },
+      { id:"rok_102_wh_hl_01", name:"Elayavoor", city:"Rest of Kerala", zone:"South", orders:231, inf_pct:0.0, cold_wp_pct:0.0, bin_acc:99.64, pst_15d:70, hv_pst:16, auto_ttl:100, expired_inv_pct:0.0, dmmq_pct:0.5, final_score:4.1, bin_acc_score:5.0, hv_pst_score:0.4, pst_score:2.8, auto_ttl_score:5.0, cold_wp_score:5.0, inf_score:5.0, expired_score:5.0, dmmq_score:3.0, ptpi_score:3.8 },
+    ];
+
+    const MISSING_STORES = [
+      { id:"hyd_164_wh_hl_01", city:"Hyderabad" },
+      { id:"hyd_130_wh_hl_01", city:"Hyderabad" },
+      { id:"koz_103_wh_hl_01", city:"Kozhikode" },
+      { id:"kol_133_wh_hl_01", city:"Kolkata" },
+      { id:"tri_104_wh_hl_01", city:"Trichy" },
+    ];
+
+    const METRIC_DEFS = [
+      { metric:"Bin Accuracy", formula:"Zero net-variance locations / Total locations audited", weight_q:"25.0%", weight_p:"20%", score_key:"bin_acc_score", higher_better:true },
+      { metric:"PST Adherence 7D (HV)", formula:"HV locations touched last 7 days / Total HV locations", weight_q:"5.0%", weight_p:"5.0%", score_key:"hv_pst_score", higher_better:true },
+      { metric:"PST Adherence 15D (All)", formula:"Locations touched last 15 days / Total locations", weight_q:"5.0%", weight_p:"5.0%", score_key:"pst_score", higher_better:true },
+      { metric:"Expired Inventory", formula:"Units of expired inventory in store / Total orders that day", weight_q:"5.0%", weight_p:"5.0%", score_key:"expired_score", higher_better:false },
+      { metric:"Auto TTL Adherence", formula:"Auto TTLs closed within 4 hrs / Total auto TTLs generated", weight_q:"5.0%", weight_p:"5.0%", score_key:"auto_ttl_score", higher_better:true },
+      { metric:"INF %", formula:"Orders INF marked / Total orders", weight_q:"17.5%", weight_p:"20.0%", score_key:"inf_score", higher_better:false },
+      { metric:"COLD Wrong Placement", formula:"Cold FSN units in wrong location / Total Cold ATP", weight_q:"2.5%", weight_p:"5.0%", score_key:"cold_wp_score", higher_better:false },
+      { metric:"Locations / Lot", formula:"Average number of locations per WID", weight_q:"5.0%", weight_p:"5.0%", score_key:null, higher_better:false },
+      { metric:"DMMQ", formula:"Damaged + Misshipment + Missing + Quality complaints / Picked units", weight_q:"10.0%", weight_p:"10.0%", score_key:"dmmq_score", higher_better:false },
+      { metric:"PTPI (seconds)", formula:"Total time in seconds to pick all units / Number of units picked", weight_q:"20.0%", weight_p:"20.0%", score_key:"ptpi_score", higher_better:false },
+    ];
+
+    const SCORE_COLS = [
+      { key:"bin_acc_score", label:"Bin Accuracy" },
+      { key:"hv_pst_score", label:"HV PST" },
+      { key:"pst_score", label:"Overall PST" },
+      { key:"auto_ttl_score", label:"Auto TTL" },
+      { key:"cold_wp_score", label:"Cold Placement" },
+      { key:"inf_score", label:"INF" },
+      { key:"expired_score", label:"Expiry" },
+      { key:"dmmq_score", label:"DMMQ" },
+      { key:"ptpi_score", label:"PTPI" },
+    ];
+
+    const TABS = ["Overview", "Scores", "Operations", "Quality", "Definitions"];
+
+    const scoreColor = s => s >= 4 ? "#22c55e" : s >= 3 ? "#f59e0b" : "#ef4444";
+    const scoreBg    = s => s >= 4 ? "rgba(34,197,94,0.12)" : s >= 3 ? "rgba(245,158,11,0.12)" : "rgba(239,68,68,0.12)";
+    const pctColor   = (v, [good, warn], inv=false) => inv ? (v>=good?"#22c55e":v>=warn?"#f59e0b":"#ef4444") : (v<=good?"#22c55e":v<=warn?"#f59e0b":"#ef4444");
+
+    function MiniBar({ value, max=5, color }) {
+      return (
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          <div style={{flex:1,height:5,background:"rgba(255,255,255,0.08)",borderRadius:3,overflow:"hidden"}}>
+            <div style={{width:`${(value/max)*100}%`,height:"100%",background:color,borderRadius:3}} />
+          </div>
+          <span style={{fontSize:11,color,minWidth:24,textAlign:"right"}}>{value}</span>
+        </div>
+      );
+    }
+
+    function ScoreRing({ score }) {
+      const r=22, cx=28, cy=28, circ=2*Math.PI*r;
+      const fill=(score/5)*circ, color=scoreColor(score);
+      return (
+        <svg width={56} height={56}>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={5}/>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={5}
+            strokeDasharray={`${fill} ${circ}`} strokeLinecap="round"
+            transform={`rotate(-90 ${cx} ${cy})`}/>
+          <text x={cx} y={cy+5} textAnchor="middle" fill={color} fontSize={13} fontWeight={700} fontFamily="IBM Plex Mono, monospace">
+            {score.toFixed(1)}
+          </text>
+        </svg>
+      );
+    }
+
+    function SortTh({ col, sortKey, sortDir, onSort, children }) {
+      const active = sortKey === col;
+      return (
+        <th onClick={() => onSort(col)} style={{
+          padding:"10px 12px", textAlign:"left", cursor:"pointer", userSelect:"none",
+          color: active ? "#FFD200" : "#64748b", fontWeight:600, fontSize:10,
+          letterSpacing:0.5, textTransform:"uppercase", whiteSpace:"nowrap",
+          borderBottom:"1px solid rgba(255,255,255,0.08)"
+        }}>
+          {children}
+          {active && <span style={{marginLeft:4}}>{sortDir==="desc"?"↓":"↑"}</span>}
+        </th>
+      );
+    }
+
+    function Dashboard() {
+      const [tab, setTab] = useState("Overview");
+      const [sortKey, setSortKey] = useState("final_score");
+      const [sortDir, setSortDir] = useState("desc");
+      const [selected, setSelected] = useState(null);
+
+      const sorted = useMemo(() => [...STORES_DATA].sort((a,b) => {
+        const va=a[sortKey]??0, vb=b[sortKey]??0;
+        return sortDir==="desc" ? vb-va : va-vb;
+      }), [sortKey, sortDir]);
+
+      const stats = useMemo(() => ({
+        totalOrders: STORES_DATA.reduce((s,d)=>s+d.orders,0),
+        avgScore: (STORES_DATA.reduce((s,d)=>s+d.final_score,0)/STORES_DATA.length).toFixed(2),
+        avgInf: (STORES_DATA.reduce((s,d)=>s+d.inf_pct,0)/STORES_DATA.length).toFixed(2),
+        avgBinAcc: (STORES_DATA.reduce((s,d)=>s+d.bin_acc,0)/STORES_DATA.length).toFixed(1),
+      }), []);
+
+      const handleSort = key => {
+        if (sortKey===key) setSortDir(d=>d==="desc"?"asc":"desc");
+        else { setSortKey(key); setSortDir("desc"); }
+      };
+
+      const storeLabel = id => id.split("_wh_hl_01")[0].toUpperCase();
+
+      return (
+        <div style={{fontFamily:"'DM Sans',sans-serif",background:"#0B1523",minHeight:"100vh",color:"#e2e8f0",paddingBottom:40}}>
+
+          {/* ── HEADER ── */}
+          <div style={{background:"linear-gradient(135deg,#0F2236 0%,#0B1523 100%)",borderBottom:"1px solid rgba(255,210,0,0.15)",padding:"18px 28px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{display:"flex",alignItems:"center",gap:14}}>
+              <div style={{background:"#FFD200",borderRadius:8,padding:"6px 12px",fontWeight:800,fontSize:13,color:"#0B1523",letterSpacing:0.5,fontFamily:"IBM Plex Mono,monospace"}}>FK</div>
+              <div>
+                <div style={{fontSize:16,fontWeight:700,letterSpacing:0.3}}>3PL Charter Dashboard</div>
+                <div style={{fontSize:11,color:"#64748b",marginTop:1}}>Inventory Hygiene · 19 May 2025 · {STORES_DATA.length} Live / 15 Charter Stores</div>
+              </div>
+            </div>
+            <div style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.25)",borderRadius:6,padding:"5px 10px",fontSize:11,color:"#f87171"}}>
+              ⚠ {MISSING_STORES.length} stores not in sheet yet
+            </div>
+          </div>
+
+          {/* ── KPI STRIP ── */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:1,background:"rgba(255,255,255,0.04)",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+            {[
+              {label:"Charter Total Orders", value:stats.totalOrders.toLocaleString(), accent:"#FFD200"},
+              {label:"Avg Final Score",       value:`${stats.avgScore} / 5`,            accent:scoreColor(parseFloat(stats.avgScore))},
+              {label:"Avg INF %",             value:`${stats.avgInf}%`,                 accent:parseFloat(stats.avgInf)<=1?"#22c55e":"#f59e0b"},
+              {label:"Avg Bin Accuracy",      value:`${stats.avgBinAcc}%`,              accent:parseFloat(stats.avgBinAcc)>=80?"#22c55e":"#f59e0b"},
+            ].map((k,i) => (
+              <div key={i} style={{padding:"14px 20px",background:"#0F1E30"}}>
+                <div style={{fontSize:10,color:"#64748b",letterSpacing:0.8,textTransform:"uppercase",marginBottom:4}}>{k.label}</div>
+                <div style={{fontSize:22,fontWeight:700,color:k.accent,fontFamily:"IBM Plex Mono,monospace"}}>{k.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── TABS ── */}
+          <div style={{display:"flex",padding:"0 28px",borderBottom:"1px solid rgba(255,255,255,0.06)"}}>
+            {TABS.map(t => (
+              <button key={t} onClick={()=>setTab(t)} style={{
+                background:"none",border:"none",cursor:"pointer",padding:"12px 18px",
+                fontSize:13,fontWeight:tab===t?600:400,
+                color:tab===t?"#FFD200":"#64748b",
+                borderBottom:`2px solid ${tab===t?"#FFD200":"transparent"}`,
+                transition:"all 0.2s",
+              }}>{t}</button>
+            ))}
+          </div>
+
+          <div style={{padding:"20px 28px"}}>
+
+            {/* ── OVERVIEW ── */}
+            {tab==="Overview" && (
+              <div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12}}>
+                  {sorted.map(store => (
+                    <div key={store.id} onClick={()=>setSelected(selected===store.id?null:store.id)} style={{
+                      background:selected===store.id?"rgba(255,210,0,0.06)":"#0F1E30",
+                      border:`1px solid ${selected===store.id?"rgba(255,210,0,0.3)":"rgba(255,255,255,0.06)"}`,
+                      borderRadius:10,padding:16,cursor:"pointer",transition:"all 0.2s",
+                    }}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
+                        <div>
+                          <div style={{fontWeight:600,fontSize:13}}>{store.name}</div>
+                          <div style={{fontSize:10,color:"#64748b",marginTop:2,fontFamily:"IBM Plex Mono,monospace"}}>{storeLabel(store.id)} · {store.city}</div>
+                        </div>
+                        <ScoreRing score={store.final_score}/>
+                      </div>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"6px 12px",fontSize:11}}>
+                        <div style={{color:"#94a3b8"}}>Orders <span style={{color:"#e2e8f0",fontWeight:600}}>{store.orders}</span></div>
+                        <div style={{color:"#94a3b8"}}>INF% <span style={{color:pctColor(store.inf_pct,[1,2.5]),fontWeight:600}}>{store.inf_pct}%</span></div>
+                        <div style={{color:"#94a3b8"}}>Bin Acc <span style={{color:pctColor(store.bin_acc,[80,60],true),fontWeight:600}}>{store.bin_acc}%</span></div>
+                        <div style={{color:"#94a3b8"}}>AutoTTL <span style={{color:pctColor(store.auto_ttl,[80,60],true),fontWeight:600}}>{store.auto_ttl}%</span></div>
+                      </div>
+                      {selected===store.id && (
+                        <div style={{marginTop:14,borderTop:"1px solid rgba(255,255,255,0.08)",paddingTop:12}}>
+                          <div style={{fontSize:10,color:"#64748b",marginBottom:8,letterSpacing:0.6,textTransform:"uppercase"}}>Score Breakdown</div>
+                          {SCORE_COLS.map(c => (
+                            <div key={c.key} style={{marginBottom:5}}>
+                              <div style={{fontSize:10,color:"#94a3b8",marginBottom:2}}>{c.label}</div>
+                              <MiniBar value={store[c.key]} max={5} color={scoreColor(store[c.key])}/>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {MISSING_STORES.map(s => (
+                    <div key={s.id} style={{background:"rgba(239,68,68,0.04)",border:"1px dashed rgba(239,68,68,0.2)",borderRadius:10,padding:16,opacity:0.6}}>
+                      <div style={{fontWeight:600,fontSize:13,color:"#f87171"}}>{storeLabel(s.id)}</div>
+                      <div style={{fontSize:10,color:"#64748b",marginTop:2,fontFamily:"IBM Plex Mono,monospace"}}>{storeLabel(s.id)} · {s.city}</div>
+                      <div style={{marginTop:12,fontSize:11,color:"#f87171"}}>Not in sheet — awaiting data</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── SCORES ── */}
+            {tab==="Scores" && (
+              <div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+                  {METRIC_DEFS.filter(d=>d.score_key).map(d => (
+                    <div key={d.metric} title={`${d.formula} | Weight: ${d.weight_q}`}
+                      style={{background:"#0F1E30",border:"1px solid rgba(255,255,255,0.08)",borderRadius:5,padding:"4px 9px",fontSize:10,color:"#94a3b8",cursor:"default"}}>
+                      <span style={{color:"#FFD200",fontWeight:600}}>{d.weight_q}</span> {d.metric}
+                    </div>
+                  ))}
+                </div>
+                <div style={{overflowX:"auto"}}>
+                  <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                    <thead>
+                      <tr style={{background:"#0F1E30"}}>
+                        <SortTh col="name" sortKey={sortKey} sortDir={sortDir} onSort={handleSort}>Store</SortTh>
+                        <SortTh col="final_score" sortKey={sortKey} sortDir={sortDir} onSort={handleSort}>
+                          <span>Final Score</span>
+                        </SortTh>
+                        {SCORE_COLS.map(c => {
+                          const def = METRIC_DEFS.find(d=>d.score_key===c.key);
+                          return (
+                            <SortTh key={c.key} col={c.key} sortKey={sortKey} sortDir={sortDir} onSort={handleSort}>
+                              <span title={def?.formula||""}>{c.label}</span>
+                              {def && <span style={{display:"block",color:"rgba(255,210,0,0.5)",fontWeight:400,fontSize:9,marginTop:1}}>{def.weight_q}</span>}
+                            </SortTh>
+                          );
+                        })}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sorted.map((store,i) => (
+                        <tr key={store.id} style={{background:i%2===0?"rgba(255,255,255,0.015)":"transparent",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                          <td style={{padding:"10px 12px",whiteSpace:"nowrap"}}>
+                            <div style={{fontWeight:600}}>{store.name}</div>
+                            <div style={{fontSize:10,color:"#64748b",fontFamily:"IBM Plex Mono,monospace"}}>{storeLabel(store.id)} · {store.city}</div>
+                          </td>
+                          <td style={{padding:"10px 12px"}}>
+                            <span style={{background:scoreBg(store.final_score),color:scoreColor(store.final_score),padding:"3px 9px",borderRadius:5,fontWeight:700,fontFamily:"IBM Plex Mono,monospace",fontSize:13}}>{store.final_score}</span>
+                          </td>
+                          {SCORE_COLS.map(c => (
+                            <td key={c.key} style={{padding:"10px 12px"}}>
+                              <span style={{color:scoreColor(store[c.key]),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store[c.key]}</span>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ── OPERATIONS ── */}
+            {tab==="Operations" && (
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                  <thead>
+                    <tr style={{background:"#0F1E30"}}>
+                      {[
+                        {key:"name",label:"Store"},
+                        {key:"orders",label:"Total Orders"},
+                        {key:"auto_ttl",label:"Auto TTL %"},
+                        {key:"pst_15d",label:"PST 15D %"},
+                        {key:"hv_pst",label:"HV PST %"},
+                        {key:"bin_acc",label:"Bin Accuracy %"},
+                      ].map(col => (
+                        <SortTh key={col.key} col={col.key} sortKey={sortKey} sortDir={sortDir} onSort={handleSort}>{col.label}</SortTh>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorted.map((store,i) => (
+                      <tr key={store.id} style={{background:i%2===0?"rgba(255,255,255,0.015)":"transparent",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                        <td style={{padding:"10px 12px"}}>
+                          <div style={{fontWeight:600}}>{store.name}</div>
+                          <div style={{fontSize:10,color:"#64748b",fontFamily:"IBM Plex Mono,monospace"}}>{store.city}</div>
+                        </td>
+                        <td style={{padding:"10px 12px",fontFamily:"IBM Plex Mono,monospace",fontWeight:600,color:"#e2e8f0"}}>{store.orders}</td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.auto_ttl,[80,60],true),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.auto_ttl}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.pst_15d,[60,40],true),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.pst_15d}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.hv_pst,[80,50],true),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.hv_pst}%</span></td>
+                        <td style={{padding:"10px 12px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:8}}>
+                            <div style={{width:80,height:5,background:"rgba(255,255,255,0.08)",borderRadius:3,overflow:"hidden"}}>
+                              <div style={{width:`${store.bin_acc}%`,height:"100%",background:pctColor(store.bin_acc,[80,60],true),borderRadius:3}}/>
+                            </div>
+                            <span style={{color:pctColor(store.bin_acc,[80,60],true),fontWeight:600,fontFamily:"IBM Plex Mono,monospace",fontSize:11}}>{store.bin_acc}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* ── QUALITY ── */}
+            {tab==="Quality" && (
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                  <thead>
+                    <tr style={{background:"#0F1E30"}}>
+                      {[
+                        {key:"name",label:"Store"},
+                        {key:"inf_pct",label:"INF %"},
+                        {key:"cold_wp_pct",label:"Cold Wrong Placement %"},
+                        {key:"expired_inv_pct",label:"Expired Inv %"},
+                        {key:"dmmq_pct",label:"DMMQ %"},
+                        {key:"final_score",label:"Final Score"},
+                      ].map(col => (
+                        <SortTh key={col.key} col={col.key} sortKey={sortKey} sortDir={sortDir} onSort={handleSort}>{col.label}</SortTh>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorted.map((store,i) => (
+                      <tr key={store.id} style={{background:i%2===0?"rgba(255,255,255,0.015)":"transparent",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                        <td style={{padding:"10px 12px"}}>
+                          <div style={{fontWeight:600}}>{store.name}</div>
+                          <div style={{fontSize:10,color:"#64748b",fontFamily:"IBM Plex Mono,monospace"}}>{store.city}</div>
+                        </td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.inf_pct,[1,2.5]),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.inf_pct}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.cold_wp_pct,[2,5]),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.cold_wp_pct}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.expired_inv_pct,[5,15]),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.expired_inv_pct}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{color:pctColor(store.dmmq_pct,[1,2]),fontWeight:600,fontFamily:"IBM Plex Mono,monospace"}}>{store.dmmq_pct}%</span></td>
+                        <td style={{padding:"10px 12px"}}><span style={{background:scoreBg(store.final_score),color:scoreColor(store.final_score),padding:"3px 9px",borderRadius:5,fontWeight:700,fontFamily:"IBM Plex Mono,monospace",fontSize:13}}>{store.final_score}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* ── DEFINITIONS ── */}
+            {tab==="Definitions" && (
+              <div>
+                <p style={{marginBottom:16,fontSize:12,color:"#64748b"}}>Score weights for Quarterly (Q) and Periodic (P) review. Hover weight pills in the Scores tab for inline formulas.</p>
+                <div style={{overflowX:"auto"}}>
+                  <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
+                    <thead>
+                      <tr style={{background:"#0F1E30"}}>
+                        {["Metric","Formula / Definition","Weight (Q)","Weight (P)","Direction"].map(h => (
+                          <th key={h} style={{padding:"10px 14px",textAlign:"left",color:"#64748b",fontWeight:600,fontSize:10,letterSpacing:0.5,textTransform:"uppercase",whiteSpace:"nowrap",borderBottom:"1px solid rgba(255,255,255,0.08)"}}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {METRIC_DEFS.map((d,i) => (
+                        <tr key={d.metric} style={{background:i%2===0?"rgba(255,255,255,0.015)":"transparent",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                          <td style={{padding:"12px 14px",fontWeight:600,whiteSpace:"nowrap",color:"#e2e8f0"}}>{d.metric}</td>
+                          <td style={{padding:"12px 14px",color:"#94a3b8",lineHeight:1.6}}>{d.formula}</td>
+                          <td style={{padding:"12px 14px",fontFamily:"IBM Plex Mono,monospace",fontWeight:700,color:"#FFD200",whiteSpace:"nowrap"}}>{d.weight_q}</td>
+                          <td style={{padding:"12px 14px",fontFamily:"IBM Plex Mono,monospace",fontWeight:600,color:"rgba(255,210,0,0.6)",whiteSpace:"nowrap"}}>{d.weight_p}</td>
+                          <td style={{padding:"12px 14px",whiteSpace:"nowrap"}}>
+                            <span style={{background:d.higher_better?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)",color:d.higher_better?"#22c55e":"#f87171",padding:"2px 8px",borderRadius:4,fontSize:10,fontWeight:600}}>
+                              {d.higher_better?"↑ Higher better":"↓ Lower better"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                      <tr style={{background:"#0F1E30",borderTop:"2px solid rgba(255,210,0,0.2)"}}>
+                        <td style={{padding:"12px 14px",fontWeight:700,color:"#FFD200"}}>Total</td>
+                        <td></td>
+                        <td style={{padding:"12px 14px",fontFamily:"IBM Plex Mono,monospace",fontWeight:700,color:"#FFD200"}}>100.0%</td>
+                        <td style={{padding:"12px 14px",fontFamily:"IBM Plex Mono,monospace",fontWeight:700,color:"#FFD200"}}>100.0%</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* ── MISSING STORES NOTE ── */}
+            <div style={{marginTop:28,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:8,padding:"12px 16px"}}>
+              <div style={{fontSize:11,fontWeight:600,color:"#f87171",marginBottom:6}}>⚠ Stores not yet in latest sheet tab (19 May)</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                {MISSING_STORES.map(s => (
+                  <span key={s.id} style={{background:"rgba(239,68,68,0.1)",color:"#f87171",padding:"3px 9px",borderRadius:5,fontSize:11,fontFamily:"IBM Plex Mono,monospace"}}>
+                    {storeLabel(s.id)} · {s.city}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Dashboard />);
+  </script>
+</body>
+</html>
