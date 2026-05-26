@@ -22,16 +22,16 @@
 const {createElement:h,useState,useMemo,Fragment}=React;
 
 const STORES=[
-  {id:"pun_114_wh_hl_01",name:"Hinjewadi Phase 3",city:"Pune",zone:"West",orders:679,inf_pct:0.0,cold_wp_pct:1.77,bin_acc:62.5,pst_15d:16,hv_pst:97,auto_ttl:0,expired_inv_pct:13.55,dmmq_pct:1.5,final_score:3.1,bin_acc_score:2.5,hv_pst_score:4.7,pst_score:0.4,auto_ttl_score:0.0,cold_wp_score:1.5,inf_score:5.0,expired_score:0.0,dmmq_score:1.5,ptpi_score:5.0},
-  {id:"pun_140_wh_hl_01",name:"Pimple Gurav",city:"Pune",zone:"West",orders:464,inf_pct:0.0,cold_wp_pct:3.54,bin_acc:62.5,pst_15d:46,hv_pst:92,auto_ttl:98,expired_inv_pct:9.05,dmmq_pct:1.3,final_score:3.4,bin_acc_score:2.5,hv_pst_score:4.2,pst_score:1.8,auto_ttl_score:4.9,cold_wp_score:0.0,inf_score:5.0,expired_score:0.0,dmmq_score:1.7,ptpi_score:5.0},
-  {id:"pun_144_wh_hl_01",name:"Marynji",city:"Pune",zone:"West",orders:685,inf_pct:0.0,cold_wp_pct:0.4,bin_acc:62.5,pst_15d:22,hv_pst:86,auto_ttl:56,expired_inv_pct:2.48,dmmq_pct:1.1,final_score:3.5,bin_acc_score:2.5,hv_pst_score:3.8,pst_score:0.8,auto_ttl_score:3.2,cold_wp_score:4.2,inf_score:5.0,expired_score:0.5,dmmq_score:1.9,ptpi_score:5.0},
-  {id:"pun_159_wh_hl_01",name:"Chikhali",city:"Pune",zone:"West",orders:286,inf_pct:0.0,cold_wp_pct:3.56,bin_acc:62.5,pst_15d:26,hv_pst:92,auto_ttl:91,expired_inv_pct:6.64,dmmq_pct:0.3,final_score:3.5,bin_acc_score:2.5,hv_pst_score:4.2,pst_score:1.0,auto_ttl_score:4.6,cold_wp_score:0.0,inf_score:5.0,expired_score:0.0,dmmq_score:3.9,ptpi_score:5.0},
-  {id:"kol_103_wh_hl_01",name:"Kamalgazi",city:"Kolkata",zone:"East",orders:612,inf_pct:0.0,cold_wp_pct:0.8,bin_acc:62.5,pst_15d:20,hv_pst:0,auto_ttl:69,expired_inv_pct:0.98,dmmq_pct:0.6,final_score:3.5,bin_acc_score:2.5,hv_pst_score:0.0,pst_score:0.6,auto_ttl_score:3.8,cold_wp_score:3.4,inf_score:5.0,expired_score:2.0,dmmq_score:2.8,ptpi_score:5.0},
-  {id:"ben_229_wh_hl_01",name:"Dommasandra",city:"Bengaluru",zone:"South",orders:221,inf_pct:0.0,cold_wp_pct:2.6,bin_acc:62.5,pst_15d:37,hv_pst:39,auto_ttl:81,expired_inv_pct:2.71,dmmq_pct:0.8,final_score:3.4,bin_acc_score:2.5,hv_pst_score:1.5,pst_score:1.5,auto_ttl_score:4.2,cold_wp_score:0.6,inf_score:5.0,expired_score:0.3,dmmq_score:2.4,ptpi_score:5.0},
-  {id:"hyd_165_wh_hl_01",name:"Neredmet Road",city:"Hyderabad",zone:"South",orders:225,inf_pct:0.0,cold_wp_pct:2.02,bin_acc:62.5,pst_15d:55,hv_pst:32,auto_ttl:96,expired_inv_pct:0.44,dmmq_pct:1.0,final_score:3.5,bin_acc_score:2.5,hv_pst_score:1.3,pst_score:2.2,auto_ttl_score:4.8,cold_wp_score:1.0,inf_score:5.0,expired_score:3.2,dmmq_score:2.0,ptpi_score:5.0},
-  {id:"hyd_134_wh_hl_01",name:"Shastripuram",city:"Hyderabad",zone:"South",orders:229,inf_pct:0.0,cold_wp_pct:0.19,bin_acc:62.5,pst_15d:63,hv_pst:5,auto_ttl:73,expired_inv_pct:6.11,dmmq_pct:1.1,final_score:3.4,bin_acc_score:2.5,hv_pst_score:0.0,pst_score:2.5,auto_ttl_score:3.9,cold_wp_score:4.6,inf_score:5.0,expired_score:0.0,dmmq_score:1.9,ptpi_score:5.0},
-  {id:"koz_105_wh_hl_01",name:"Puthiyara",city:"Kozhikode",zone:"South",orders:233,inf_pct:0.0,cold_wp_pct:1.98,bin_acc:62.5,pst_15d:57,hv_pst:24,auto_ttl:100,expired_inv_pct:0.0,dmmq_pct:0.7,final_score:3.7,bin_acc_score:2.5,hv_pst_score:0.9,pst_score:2.3,auto_ttl_score:5.0,cold_wp_score:1.0,inf_score:5.0,expired_score:5.0,dmmq_score:2.7,ptpi_score:5.0},
-  {id:"rok_102_wh_hl_01",name:"Elayavoor",city:"Rest of Kerala",zone:"South",orders:242,inf_pct:0.0,cold_wp_pct:9.35,bin_acc:62.5,pst_15d:77,hv_pst:53,auto_ttl:97,expired_inv_pct:0.0,dmmq_pct:0.3,final_score:3.9,bin_acc_score:2.5,hv_pst_score:2.1,pst_score:3.1,auto_ttl_score:4.9,cold_wp_score:0.0,inf_score:5.0,expired_score:5.0,dmmq_score:4.1,ptpi_score:5.0},
+  {id:"pun_144_wh_hl_01",name:"Marynji",city:"Pune",zone:"West",orders:685,inf_pct:0.58,cold_wp_pct:3.16,bin_acc:44.44,pst_15d:22.0,hv_pst:86.0,auto_ttl:56.0,expired_inv_pct:2.48,dmmq_pct:1.1,loc_lot:1.4,final_score:2.8,bin_acc_score:1.8,hv_pst_score:3.8,pst_score:0.8,auto_ttl_score:3.2,cold_wp_score:0.2,inf_score:3.8,expired_score:0.5,dmmq_score:1.9,ptpi_score:4.6,loc_lot_score:3.4},
+  {id:"pun_114_wh_hl_01",name:"Hinjewadi Phase 3",city:"Pune",zone:"West",orders:679,inf_pct:0.0,cold_wp_pct:1.42,bin_acc:40.0,pst_15d:16.0,hv_pst:97.0,auto_ttl:0.0,expired_inv_pct:13.55,dmmq_pct:1.5,loc_lot:1.42,final_score:2.8,bin_acc_score:1.6,hv_pst_score:4.7,pst_score:0.4,auto_ttl_score:0.0,cold_wp_score:2.2,inf_score:5.0,expired_score:0.0,dmmq_score:1.5,ptpi_score:3.9,loc_lot_score:3.3},
+  {id:"pun_140_wh_hl_01",name:"Pimple Gurav",city:"Pune",zone:"West",orders:464,inf_pct:0.22,cold_wp_pct:2.22,bin_acc:96.74,pst_15d:46.0,hv_pst:92.0,auto_ttl:98.0,expired_inv_pct:9.05,dmmq_pct:1.3,loc_lot:1.44,final_score:3.7,bin_acc_score:4.7,hv_pst_score:4.2,pst_score:1.8,auto_ttl_score:4.9,cold_wp_score:0.9,inf_score:4.6,expired_score:0.0,dmmq_score:1.7,ptpi_score:4.7,loc_lot_score:3.2},
+  {id:"kol_103_wh_hl_01",name:"Kamalgazi",city:"Kolkata",zone:"East",orders:612,inf_pct:1.47,cold_wp_pct:4.35,bin_acc:75.0,pst_15d:20.0,hv_pst:0.0,auto_ttl:69.0,expired_inv_pct:0.98,dmmq_pct:0.6,loc_lot:1.22,final_score:2.7,bin_acc_score:3.0,hv_pst_score:0.0,pst_score:0.6,auto_ttl_score:3.8,cold_wp_score:0.0,inf_score:2.1,expired_score:2.0,dmmq_score:2.8,ptpi_score:4.4,loc_lot_score:4.2},
+  {id:"ben_229_wh_hl_01",name:"Dommasandra",city:"Bengaluru",zone:"South",orders:221,inf_pct:0.45,cold_wp_pct:2.6,bin_acc:92.67,pst_15d:37.0,hv_pst:39.0,auto_ttl:81.0,expired_inv_pct:2.71,dmmq_pct:0.8,loc_lot:1.18,final_score:3.2,bin_acc_score:4.3,hv_pst_score:1.5,pst_score:1.5,auto_ttl_score:4.2,cold_wp_score:0.6,inf_score:4.1,expired_score:0.3,dmmq_score:2.4,ptpi_score:3.3,loc_lot_score:4.5},
+  {id:"hyd_165_wh_hl_01",name:"Neredmet Road",city:"Hyderabad",zone:"South",orders:225,inf_pct:0.0,cold_wp_pct:3.45,bin_acc:98.54,pst_15d:55.0,hv_pst:32.0,auto_ttl:96.0,expired_inv_pct:0.44,dmmq_pct:1.0,loc_lot:1.25,final_score:3.9,bin_acc_score:4.9,hv_pst_score:1.3,pst_score:2.2,auto_ttl_score:4.8,cold_wp_score:0.0,inf_score:5.0,expired_score:3.2,dmmq_score:2.0,ptpi_score:5.0,loc_lot_score:4.0},
+  {id:"koz_105_wh_hl_01",name:"Puthiyara",city:"Kozhikode",zone:"South",orders:233,inf_pct:0.0,cold_wp_pct:7.81,bin_acc:97.58,pst_15d:57.0,hv_pst:24.0,auto_ttl:100.0,expired_inv_pct:0.0,dmmq_pct:0.7,loc_lot:1.38,final_score:3.8,bin_acc_score:4.8,hv_pst_score:0.9,pst_score:2.3,auto_ttl_score:5.0,cold_wp_score:0.0,inf_score:5.0,expired_score:5.0,dmmq_score:2.7,ptpi_score:3.6,loc_lot_score:3.5},
+  {id:"rok_102_wh_hl_01",name:"Elayavoor",city:"Rest of Kerala",zone:"South",orders:242,inf_pct:0.0,cold_wp_pct:0.0,bin_acc:99.47,pst_15d:77.0,hv_pst:53.0,auto_ttl:97.0,expired_inv_pct:0.0,dmmq_pct:0.3,loc_lot:1.31,final_score:4.4,bin_acc_score:4.9,hv_pst_score:2.1,pst_score:3.1,auto_ttl_score:4.9,cold_wp_score:5.0,inf_score:5.0,expired_score:5.0,dmmq_score:4.1,ptpi_score:4.1,loc_lot_score:3.8},
+  {id:"hyd_134_wh_hl_01",name:"Shastripuram",city:"Hyderabad",zone:"South",orders:229,inf_pct:2.18,cold_wp_pct:4.59,bin_acc:100.0,pst_15d:63.0,hv_pst:5.0,auto_ttl:73.0,expired_inv_pct:6.11,dmmq_pct:1.1,loc_lot:1.47,final_score:2.7,bin_acc_score:5.0,hv_pst_score:0.0,pst_score:2.5,auto_ttl_score:3.9,cold_wp_score:0.0,inf_score:1.3,expired_score:0.0,dmmq_score:1.9,ptpi_score:4.1,loc_lot_score:3.1},
+  {id:"pun_159_wh_hl_01",name:"Chikhali",city:"Pune",zone:"West",orders:286,inf_pct:0.0,cold_wp_pct:4.95,bin_acc:93.95,pst_15d:26.0,hv_pst:92.0,auto_ttl:91.0,expired_inv_pct:6.64,dmmq_pct:0.3,loc_lot:1.65,final_score:3.9,bin_acc_score:4.4,hv_pst_score:4.2,pst_score:1.0,auto_ttl_score:4.6,cold_wp_score:0.0,inf_score:5.0,expired_score:0.0,dmmq_score:3.9,ptpi_score:4.9,loc_lot_score:2.4},
 ];
 
 const MISSING=[
@@ -50,7 +50,7 @@ const METRIC_DEFS=[
   {metric:"Auto TTL Adherence", formula:"Auto TTLs closed within 4 hrs / Total auto TTLs generated",     wq:"5.0%", wp:"5.0%", key:"auto_ttl_score", up:true},
   {metric:"INF %",              formula:"Orders INF marked / Total orders",                               wq:"17.5%",wp:"20.0%",key:"inf_score",      up:false},
   {metric:"COLD Wrong Placement",formula:"Cold FSN units in wrong location / Total Cold ATP",             wq:"2.5%", wp:"5.0%", key:"cold_wp_score",  up:false},
-  {metric:"Locations / Lot",    formula:"Average number of locations per WID",                            wq:"5.0%", wp:"5.0%", key:null,             up:false},
+  {metric:"Locations / Lot",    formula:"Average number of locations per WID",                            wq:"5.0%", wp:"5.0%", key:"loc_lot_score",  up:false},
   {metric:"DMMQ",               formula:"Damaged + Misshipment + Missing + Quality complaints / Picked", wq:"10.0%",wp:"10.0%",key:"dmmq_score",     up:false},
   {metric:"PTPI (seconds)",     formula:"Total pick time in seconds / Number of units picked",            wq:"20.0%",wp:"20.0%",key:"ptpi_score",     up:false},
 ];
@@ -65,6 +65,7 @@ const SCORE_COLS=[
   {key:"expired_score",label:"Expiry",wq:"5.0%"},
   {key:"dmmq_score",label:"DMMQ",wq:"10.0%"},
   {key:"ptpi_score",label:"PTPI",wq:"20.0%"},
+  {key:"loc_lot_score",label:"Loc/Lot",wq:"5.0%"},
 ];
 
 const TABS=["Overview","Scores","Operations","Quality","Definitions"];
@@ -140,7 +141,7 @@ function App(){
         h("div",{style:{background:"#FFD200",borderRadius:8,padding:"6px 12px",fontWeight:800,fontSize:13,color:"#0B1523",letterSpacing:.5,...mono}},"FK"),
         h("div",null,
           h("div",{style:{fontSize:16,fontWeight:700,letterSpacing:.3}},"3PL Charter Dashboard"),
-          h("div",{style:{fontSize:11,color:"#64748b",marginTop:1}},"Inventory Hygiene · 23 May 2025 · "+STORES.length+" Live / 15 Charter Stores")
+          h("div",{style:{fontSize:11,color:"#64748b",marginTop:1}},"Inventory Hygiene · 23 May 2025 (updated) · "+STORES.length+" Live / 15 Charter Stores")
         )
       ),
       h("div",{style:{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.25)",borderRadius:6,padding:"5px 10px",fontSize:11,color:"#f87171"}},
